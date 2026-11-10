@@ -1,0 +1,103 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define M 100
+#define Q 100
+
+int q[Q];
+int f = 0, r = 0;
+
+void nq(int v)
+{
+    if (r == Q)
+    {
+        printf("Queue Overflow");
+        return;
+    }
+    q[r++] = v;
+}
+
+int dq()
+{
+    if (f == r)
+    {
+        printf("Queue Underflow");
+        return -1;
+    }
+    return q[f++];
+}
+
+int isE()
+{
+    return f == r;
+}
+
+void bfs(int adj[M][M], int n, int s)
+{
+    int v[M] = {0};
+    int i;
+
+    nq(s);
+    v[s] = 1;
+
+    printf("\nBroadcast Tree (BFS order):\n");
+
+    while (!isE())
+    {
+        int ch = dq();
+
+        printf("Host %d\n", ch + 1);
+
+        for (i = 0; i < n; i++)
+        {
+            if (adj[ch][i] == 1 && !v[i])
+            {
+                nq(i);
+                v[i] = 1;
+            }
+        }
+    }
+}
+
+int main()
+{
+    int n, i, j, s;
+    int adj[M][M];
+
+    printf("Enter the no. of hosts in the subnet:");
+    scanf("%d", &n);
+
+    printf("Enter adjacency matrix:\n");
+
+    for (i = 0; i < n; i++)
+    {
+        for (j = 0; j < n; j++)
+        {
+            scanf("%d", &adj[i][j]);
+        }
+    }
+
+    printf("Enter starting host (1 to %d): ", n);
+    scanf("%d", &s);
+
+    bfs(adj, n, s - 1);
+
+    return 0;
+}
+
+op
+Enter the no. of hosts in the subnet: 4
+
+Enter adjacency matrix:
+0 1 1 0
+1 0 0 1
+1 0 0 1
+0 1 1 0
+
+Enter starting host (1 to 4): 1
+Broadcast Tree (BFS order):
+
+Host 1
+Host 2
+Host 3
+Host 4
