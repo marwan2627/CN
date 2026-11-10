@@ -1,0 +1,99 @@
+
+#include<stdio.h>
+#include<conio.h>
+
+void main()
+{
+    int path[10][6], i, j, min, a[6][6], p;
+    int st=1, ed=5, stp, edp, t[10], index;
+
+    clrscr();
+
+    printf("Enter the cost matrix\n");
+
+    for(i=1; i<=5; i++)
+        for(j=1; j<=5; j++)
+            scanf("%d", &a[i][j]);
+
+    printf("Enter the paths\n");
+    scanf("%d", &p);
+
+    if(p<1 || p>9)
+    {
+        printf("Invalid number of paths");
+        getch();
+        return;
+    }
+
+    printf("Enter possible paths\n");
+
+    for(i=1; i<=p; i++)
+        for(j=1; j<=5; j++)
+            scanf("%d", &path[i][j]);
+
+    for(i=1; i<=p; i++)
+    {
+        t[i]=0;
+        stp=st;
+
+        for(j=1; j<=4; j++)
+        {
+            edp=path[i][j+1];
+
+            t[i]=t[i]+a[stp][edp];
+
+            if(edp==ed)
+                break;
+            else
+                stp=edp;
+        }
+    }
+
+    min=t[1];
+    index=1;
+
+    for(i=1; i<=p; i++)
+    {
+        if(min>t[i])
+        {
+            min=t[i];
+            index=i;
+        }
+    }
+
+    printf("\nMinimum cost %d", min);
+
+    printf("\nMinimum cost path ");
+
+    for(i=1; i<=5; i++)
+    {
+        printf("--> %d", path[index][i]);
+
+        if(path[index][i]==ed)
+            break;
+    }
+
+    getch();
+}
+
+
+op
+  Enter the cost matrix
+
+0 2 4 0 0
+2 0 1 7 0
+4 1 0 3 5
+0 7 3 0 2
+0 0 5 2 0
+
+Enter the paths
+3
+
+Enter possible paths
+
+1 2 4 5 0
+1 3 5 0 0
+1 2 3 5 0
+
+Minimum cost 5
+Minimum cost path --> 1 --> 2 --> 4 --> 5
