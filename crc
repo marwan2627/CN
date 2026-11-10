@@ -1,0 +1,127 @@
+
+#include<stdio.h>
+#include<conio.h>
+
+int glen, dlen;
+
+void remainder(int[], int[], int, int[]);
+
+void main()
+{
+    int data[50], ddup[100], gen[20], i, j;
+    int tlen, rem[20] = {0}, count = 0;
+
+    clrscr();
+
+    /* Accepting the data information */
+
+    printf("\nEnter the length of the data to be transmitted:");
+    scanf("%d", &dlen);
+
+    if(dlen < 1 || dlen > 50)
+    {
+        printf("\nInvalid data length");
+        getch();
+        return;
+    }
+
+    printf("\nEnter the actual data to be transmitted:");
+    for(i = 0; i < dlen; i++)
+    {
+        scanf("%d", &data[i]);
+        ddup[i] = data[i];
+    }
+
+    /* Accepting the generator information */
+
+    printf("\nEnter the generator length:");
+    scanf("%d", &glen);
+
+    if(glen < 2 || glen > 20 || glen > dlen + 1)
+    {
+        printf("\nInvalid generator length");
+        getch();
+        return;
+    }
+
+    printf("\nEnter the generator value:");
+    for(i = 0; i < glen; i++)
+        scanf("%d", &gen[i]);
+
+    tlen = dlen + glen - 1;
+
+    /* Adding (glen-1) zeros to data */
+
+    for(i = dlen; i < tlen; i++)
+        ddup[i] = 0;
+
+    /* Finding the remainder */
+
+    remainder(ddup, gen, tlen, rem);
+
+    /* Adding remainder to original data */
+
+    for(i = 0; i < dlen; i++)
+        ddup[i] = data[i];
+
+    for(i = dlen, j = 0; j < glen - 1; j++, i++)
+        ddup[i] = rem[j];
+
+    printf("\nTransmitted frame:");
+    for(i = 0; i < tlen; i++)
+        printf("%d", ddup[i]);
+
+    /* Checking the correctness of the frame */
+
+    remainder(ddup, gen, tlen, rem);
+
+    for(i = 0; i < glen - 1; i++)
+    {
+        if(rem[i] != 0)
+            count++;
+    }
+
+    if(count == 0)
+        printf("\nFrame is received correctly");
+    else
+        printf("\nFrame is not received correctly");
+
+    getch();
+}
+
+/* Function to find the remainder */
+
+void remainder(int ddup[], int gen[], int total_len, int rem[])
+{
+    int temp[100], i, j;
+
+    for(i = 0; i < total_len; i++)
+        temp[i] = ddup[i];
+
+    for(i = 0; i <= total_len - glen; i++)
+    {
+        if(temp[i] == 1)
+        {
+            for(j = 0; j < glen; j++)
+                temp[i+j] = temp[i+j] ^ gen[j];
+        }
+    }
+
+    for(i = 0; i < glen - 1; i++)
+        rem[i] = temp[total_len - glen + 1 + i];
+}
+
+
+op
+Enter the length of the data to be transmitted: 4
+
+Enter the actual data to be transmitted:
+1 0 0 1
+
+Enter the generator length: 4
+
+Enter the generator value:
+1 1 0 1
+Transmitted frame: 1001011
+
+Frame is received correctly
